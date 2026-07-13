@@ -1,0 +1,116 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
+
+backend:
+  name: github
+  repo: ccohan825/my-blog-averagesportsfan-astro
+  branch: main
+
+media_folder: /public/images/uploads
+public_folder: /images/uploads
+
+media_libraries:
+  default:
+    config:
+      slugify_filename: true
+
+slug:
+  clean_accents: true
+  sanitize_replacement: "-"
+  trim: true
+  lowercase: true
+
+collections:
+  - name: blog
+    label: Blog Posts
+    label_singular: Blog Post
+    description: Create and edit Average Sports Fan articles.
+    folder: /src/content/blog
+    create: true
+    extension: md
+    format: frontmatter
+    slug: "{{fields._slug}}"
+    preview_path: "/blogs/{{slug}}/"
+
+    sortable_fields:
+      fields:
+        - pubDate
+        - title
+        - category
+      default:
+        field: pubDate
+        direction: descending
+
+    view_filters:
+      - label: Drafts
+        field: draft
+        pattern: true
+
+      - label: Published
+        field: draft
+        pattern: false
+
+      - label: NFL
+        field: category
+        pattern: NFL
+
+      - label: College Football
+        field: category
+        pattern: College Football
+
+      - label: The Big Four
+        field: category
+        pattern: The Big Four
+
+      - label: Random Thoughts
+        field: category
+        pattern: Random Thoughts
+
+    fields:
+      - name: title
+        label: Title
+        widget: string
+
+      - name: description
+        label: Description
+        widget: text
+        hint: This appears on article cards and in search results.
+
+      - name: pubDate
+        label: Publication Date
+        widget: datetime
+        type: date
+
+      - name: category
+        label: Category
+        widget: select
+        options:
+          - NFL
+          - College Football
+          - The Big Four
+          - Random Thoughts
+
+      - name: heroImage
+        label: Featured Image
+        widget: image
+        required: false
+        hint: Optional image displayed near the top of the article.
+
+      - name: heroImageAlt
+        label: Featured Image Description
+        widget: string
+        required: false
+        hint: Describe the featured image for accessibility and SEO.
+
+      - name: author
+        label: Author
+        widget: string
+        default: Average Sports Fan
+
+      - name: draft
+        label: Save as Draft
+        widget: boolean
+        default: false
+
+      - name: body
+        label: Article Body
+        widget: richtext
