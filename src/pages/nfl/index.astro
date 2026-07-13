@@ -1,0 +1,113 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+
+import '../../styles/home.css';
+import '../../styles/mobile.css';
+
+const posts = (
+  await getCollection(
+    'blog',
+    ({ data }) =>
+      data.draft !== true &&
+      data.category === 'NFL'
+  )
+).sort(
+  (a, b) =>
+    b.data.pubDate.getTime() -
+    a.data.pubDate.getTime()
+);
+---
+
+<BaseLayout
+  title="NFL Blogs | Average Sports Fan"
+  description="NFL reactions, explainers, rankings, gambling takes, and fan opinions from Average Sports Fan."
+>
+  <main class="page-wrap category-page">
+    <section class="category-intro">
+      <div class="hero-kicker">Average Sports Fan</div>
+
+      <h1>NFL Blogs</h1>
+
+      <p>
+        NFL reactions, rankings, explainers, hot takes,
+        gambling talk, and all the chaos around the league.
+      </p>
+    </section>
+
+    <h2 class="section-title">
+      <span>Latest NFL Blogs</span>
+    </h2>
+
+    <section class="blog-grid">
+      {
+        posts.length === 0 ? (
+          <div class="empty-posts">
+            No NFL blogs have been published yet.
+          </div>
+        ) : (
+          posts.map((post) => (
+            <ArticleCard
+              title={post.data.title}
+              description={post.data.description}
+              category={post.data.category}
+              pubDate={post.data.pubDate}
+              href={`/blogs/${post.id}/`}
+              image={post.data.heroImage}
+              imageAlt={post.data.heroImageAlt}
+            />
+          ))
+        )
+      }
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .category-page {
+    padding-bottom: 40px;
+  }
+
+  .category-intro {
+    margin-top: 30px;
+    padding: 52px 60px;
+    border-radius: 14px;
+    background:
+      radial-gradient(
+        circle at 80% 30%,
+        rgb(0 68 145 / 48%),
+        transparent 32%
+      ),
+      linear-gradient(
+        135deg,
+        var(--navy),
+        var(--blue)
+      );
+    color: var(--white);
+    box-shadow: var(--card-shadow);
+  }
+
+  .category-intro h1 {
+    margin: 12px 0;
+    font-family: Impact, "Arial Black", sans-serif;
+    font-size: clamp(52px, 8vw, 88px);
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
+
+  .category-intro p {
+    max-width: 680px;
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 700px) {
+    .category-intro {
+      padding: 38px 24px;
+      text-align: center;
+    }
+  }
+</style>

@@ -13,8 +13,8 @@ const posts = (
   )
 ).sort(
   (a, b) =>
-    b.data.pubDate.valueOf() -
-    a.data.pubDate.valueOf()
+    b.data.pubDate.getTime() -
+    a.data.pubDate.getTime()
 );
 ---
 
