@@ -1,17 +1,168 @@
 ---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
 
+const latestPosts = (
+  await getCollection('blog', ({ data }) => data.draft !== true)
+)
+  .sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  )
+  .slice(0, 5);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout
+  title="Average Sports Fan | NFL and College Football"
+  description="NFL and college football takes, explainers, overreactions, and fanbase slander."
+>
+  <div class="site-container">
+    <section class="hero">
+      <p class="eyebrow">Football for regular fans</p>
+
+      <h1>Average Sports Fan</h1>
+
+      <p class="hero-description">
+        NFL and college football takes, explainers, overreactions,
+        bad beats, and fanbase slander.
+      </p>
+
+      <a class="primary-button" href="/blogs/">
+        Read the latest blogs
+      </a>
+    </section>
+
+    <section>
+      <div class="section-heading">
+        <h2>Latest Articles</h2>
+
+        <a href="/blogs/">View all</a>
+      </div>
+
+      <div class="article-grid">
+        {
+          latestPosts.map((post) => (
+            <article class="article-card">
+              <p class="article-category">
+                {post.data.category}
+              </p>
+
+              <h3>
+                <a href={`/blogs/${post.id}/`}>
+                  {post.data.title}
+                </a>
+              </h3>
+
+              <p>{post.data.description}</p>
+
+              <time datetime={post.data.pubDate.toISOString()}>
+                {post.data.pubDate.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </time>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .hero {
+    margin-bottom: 56px;
+    padding: 72px 40px;
+    border-radius: 8px;
+    background: var(--color-navy);
+    color: var(--color-white);
+  }
+
+  .eyebrow {
+    margin: 0 0 8px;
+    color: #a9c9e8;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    line-height: 1;
+  }
+
+  .hero-description {
+    max-width: 680px;
+    margin: 24px 0;
+    font-size: 1.2rem;
+  }
+
+  .primary-button {
+    display: inline-block;
+    padding: 12px 20px;
+    border-radius: 4px;
+    background: var(--color-red);
+    color: var(--color-white);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .article-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .article-card {
+    padding: 24px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    background: var(--color-white);
+  }
+
+  .article-card h3 {
+    margin: 8px 0;
+    font-size: 1.35rem;
+    line-height: 1.25;
+  }
+
+  .article-card h3 a {
+    text-decoration: none;
+  }
+
+  .article-card h3 a:hover {
+    text-decoration: underline;
+  }
+
+  .article-category {
+    margin: 0;
+    color: var(--color-red);
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  time {
+    color: var(--color-muted);
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 850px) {
+    .article-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .hero {
+      padding: 48px 24px;
+    }
+  }
+</style>
