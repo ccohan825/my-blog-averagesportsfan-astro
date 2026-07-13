@@ -1,0 +1,59 @@
+---
+import { getCollection } from 'astro:content';
+
+const latestPosts = (
+  await getCollection('blog', ({ data }) => data.draft !== true)
+)
+  .sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  )
+  .slice(0, 5);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <title>Average Sports Fan</title>
+
+    <meta
+      name="description"
+      content="NFL and college football commentary for the average sports fan."
+    />
+  </head>
+
+  <body>
+    <main>
+      <h1>Average Sports Fan</h1>
+
+      <p>
+        NFL and college football takes, explainers,
+        overreactions, and fanbase slander.
+      </p>
+
+      <p>
+        <a href="/blogs/">View all blogs</a>
+      </p>
+
+      <h2>Latest Articles</h2>
+
+      <ul>
+        {
+          latestPosts.map((post) => (
+            <li>
+              <a href={`/blogs/${post.id}/`}>
+                {post.data.title}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,125 @@
+---
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection(
+    'blog',
+    ({ data }) => data.draft !== true
+  );
+
+  return posts.map((post) => ({
+    params: {
+      id: post.id,
+    },
+    props: {
+      post,
+    },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <title>{post.data.title} | Average Sports Fan</title>
+
+    <meta
+      name="description"
+      content={post.data.description}
+    />
+  </head>
+
+  <body>
+    <header>
+      <a href="/">Average Sports Fan</a>
+
+      <nav>
+        <a href="/blogs/">Blogs</a>
+        <a href="/nfl/">NFL</a>
+        <a href="/college-football/">College Football</a>
+      </nav>
+    </header>
+
+    <main>
+      <article>
+        <p>{post.data.category}</p>
+
+        <h1>{post.data.title}</h1>
+
+        <p>{post.data.description}</p>
+
+        <time datetime={post.data.pubDate.toISOString()}>
+          {post.data.pubDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })}
+        </time>
+
+        {
+          post.data.heroImage && (
+            <img
+              src={post.data.heroImage}
+              alt={post.data.heroImageAlt || post.data.title}
+            />
+          )
+        }
+
+        <div class="article-body">
+          <Content />
+        </div>
+      </article>
+    </main>
+  </body>
+</html>
+
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    line-height: 1.7;
+  }
+
+  header,
+  main {
+    width: min(800px, 92%);
+    margin: 0 auto;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 24px 0;
+  }
+
+  nav {
+    display: flex;
+    gap: 16px;
+  }
+
+  article {
+    padding: 40px 0;
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 32px 0;
+  }
+
+  .article-body {
+    margin-top: 32px;
+  }
+</style>
