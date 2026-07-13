@@ -14,9 +14,11 @@ const blog = defineCollection({
     pubDate: z.coerce.date(),
 
     category: z.enum([
-      'NFL',
-      'College Football',
-    ]),
+  'NFL',
+  'College Football',
+  'The Big Four',
+  'Random Thoughts',
+]),
 
     heroImage: z.string().optional(),
     heroImageAlt: z.string().optional(),

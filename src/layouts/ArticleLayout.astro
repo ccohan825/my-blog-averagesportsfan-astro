@@ -10,7 +10,11 @@ interface Props {
   title: string;
   description: string;
   pubDate: Date;
-  category: 'NFL' | 'College Football';
+  category:
+  | 'NFL'
+  | 'College Football'
+  | 'The Big Four'
+  | 'Random Thoughts';
   author: string;
   heroImage?: string;
   heroImageAlt?: string;
@@ -33,15 +37,27 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
   day: 'numeric',
 });
 
-const categoryURL =
-  category === 'NFL'
-    ? '/nfl/'
-    : '/college-football/';
+const categoryPages = {
+  NFL: {
+    url: '/nfl/',
+    buttonText: 'More NFL Blogs',
+  },
+  'College Football': {
+    url: '/college-football/',
+    buttonText: 'More College Football Blogs',
+  },
+  'The Big Four': {
+    url: '/the-big-four/',
+    buttonText: 'More Big Four Blogs',
+  },
+  'Random Thoughts': {
+    url: '/random-thoughts/',
+    buttonText: 'More Random Thoughts',
+  },
+} as const;
 
-const categoryButtonText =
-  category === 'NFL'
-    ? 'More NFL Blogs'
-    : 'More College Football Blogs';
+const categoryURL = categoryPages[category].url;
+const categoryButtonText = categoryPages[category].buttonText;
 
 const relatedPosts = (
   await getCollection(

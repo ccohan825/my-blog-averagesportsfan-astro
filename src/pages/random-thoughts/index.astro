@@ -1,0 +1,114 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+
+import '../../styles/home.css';
+import '../../styles/mobile.css';
+
+const posts = (
+  await getCollection(
+    'blog',
+    ({ data }) =>
+      data.draft !== true &&
+      data.category === 'Random Thoughts'
+  )
+).sort(
+  (a, b) =>
+    b.data.pubDate.getTime() -
+    a.data.pubDate.getTime()
+);
+---
+
+<BaseLayout
+  title="Random Thoughts | Average Sports Fan"
+  description="Wildcard blogs about pop culture, things online, random reactions, and anything else that does not fit anywhere."
+>
+  <main class="page-wrap category-page">
+    <section class="category-intro">
+      <div class="hero-kicker">Total Wildcard</div>
+
+      <h1>Random Thoughts</h1>
+
+      <p>
+        This is me putting my thoughts into random blogs that don’t fit
+        anywhere else. Random shit I see online to react to: pop culture,
+        literally anything. Total wildcard blogs.
+      </p>
+    </section>
+
+    <h2 class="section-title">
+      <span>Latest Random Thoughts</span>
+    </h2>
+
+    <section class="blog-grid">
+      {
+        posts.length === 0 ? (
+          <div class="empty-posts">
+            No random thoughts have been published yet.
+          </div>
+        ) : (
+          posts.map((post) => (
+            <ArticleCard
+              title={post.data.title}
+              description={post.data.description}
+              category={post.data.category}
+              pubDate={post.data.pubDate}
+              href={`/blogs/${post.id}/`}
+              image={post.data.heroImage}
+              imageAlt={post.data.heroImageAlt}
+            />
+          ))
+        )
+      }
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .category-page {
+    padding-bottom: 40px;
+  }
+
+  .category-intro {
+    margin-top: 30px;
+    padding: 52px 60px;
+    border-radius: 14px;
+    background:
+      radial-gradient(
+        circle at 78% 26%,
+        rgb(255 255 255 / 14%),
+        transparent 30%
+      ),
+      linear-gradient(
+        135deg,
+        var(--navy),
+        #35153f
+      );
+    color: var(--white);
+    box-shadow: var(--card-shadow);
+  }
+
+  .category-intro h1 {
+    margin: 12px 0;
+    font-family: Impact, "Arial Black", sans-serif;
+    font-size: clamp(46px, 8vw, 84px);
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
+
+  .category-intro p {
+    max-width: 760px;
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 700px) {
+    .category-intro {
+      padding: 38px 24px;
+      text-align: center;
+    }
+  }
+</style>
