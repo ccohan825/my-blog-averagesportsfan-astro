@@ -2,167 +2,177 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const latestPosts = (
-  await getCollection('blog', ({ data }) => data.draft !== true)
-)
+import '../styles/home.css';
+import '../styles/mobile.css';
+
+const posts = await getCollection(
+  'blog',
+  ({ data }) => data.draft !== true
+);
+
+const latestPosts = posts
   .sort(
-    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+    (a, b) =>
+      b.data.pubDate.valueOf() -
+      a.data.pubDate.valueOf()
   )
-  .slice(0, 5);
+  .slice(0, 3);
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
 ---
 
 <BaseLayout
-  title="Average Sports Fan | NFL and College Football"
-  description="NFL and college football takes, explainers, overreactions, and fanbase slander."
+  title="Average Sports Fan | NFL & College Football Blog"
+  description="Average Sports Fan covers NFL and college football with fan reactions, rankings, and hot takes."
 >
-  <div class="site-container">
-    <section class="hero">
-      <p class="eyebrow">Football for regular fans</p>
+  <section class="brand-strip">
+    <img
+      src="/images/red-brush.png"
+      class="corner-brush brush-red-left"
+      alt=""
+    />
 
-      <h1>Average Sports Fan</h1>
+    <img
+      src="/images/blue-brush.png"
+      class="corner-brush brush-blue-left"
+      alt=""
+    />
 
-      <p class="hero-description">
-        NFL and college football takes, explainers, overreactions,
-        bad beats, and fanbase slander.
-      </p>
+    <img
+      src="/images/blue-brush.png"
+      class="corner-brush brush-blue-right"
+      alt=""
+    />
 
-      <a class="primary-button" href="/blogs/">
-        Read the latest blogs
-      </a>
-    </section>
+    <img
+      src="/images/red-brush.png"
+      class="corner-brush brush-red-right"
+      alt=""
+    />
 
-    <section>
-      <div class="section-heading">
-        <h2>Latest Articles</h2>
+    <div class="brand-content">
+      <div class="brand-side left">
+        <img
+          src="/images/falling-fan.png"
+          class="brand-character falling-fan-img"
+          alt="Average Sports Fan diving for a football"
+        />
 
-        <a href="/blogs/">View all</a>
+        <div class="callout left">
+          <span class="navy">Not experts.</span>
+          <span class="red">Just fans.</span>
+        </div>
       </div>
 
-      <div class="article-grid">
-        {
-          latestPosts.map((post) => (
-            <article class="article-card">
-              <p class="article-category">
-                {post.data.category}
-              </p>
+      <img
+        src="/images/logo.png"
+        class="brand-logo"
+        alt="Average Sports Fan logo"
+      />
 
-              <h3>
-                <a href={`/blogs/${post.id}/`}>
-                  {post.data.title}
-                </a>
-              </h3>
+      <div class="brand-side right">
+        <div class="callout right">
+          <span class="navy">Hot takes.</span>
+          <span class="red">Cold beers.</span>
+          <span class="navy">Chaos.</span>
+        </div>
+
+        <img
+          src="/images/fan.png"
+          class="brand-character standing-fan-img"
+          alt="Average Sports Fan cartoon fan"
+        />
+      </div>
+    </div>
+
+    <div class="brand-slogan">
+      Real Fans. Real Opinions. <span>Zero Filter.</span>
+    </div>
+  </section>
+
+  <main class="page-wrap">
+    <section class="hero-card">
+      <div class="hero-copy">
+        <div class="hero-kicker">
+          NFL • College Football • Fan Reactions
+        </div>
+
+        <h1>
+          Football
+          <span>From the Fan Perspective</span>
+        </h1>
+
+        <p>
+          We cover the NFL and college football through the eyes of fans:
+          rankings, reactions, hot takes, and all the chaos in between.
+        </p>
+
+        <a class="primary-button" href="/blogs/">
+          Dive Into the Chaos →
+        </a>
+      </div>
+    </section>
+
+    <h2 class="section-title">
+      <span>Latest Blogs</span>
+    </h2>
+
+    <section class="blog-grid" id="latest-posts">
+      {
+        latestPosts.length === 0 ? (
+          <div class="empty-posts">
+            No blogs published yet.
+          </div>
+        ) : (
+          latestPosts.map((post) => (
+            <article class="post-card">
+              <div class="post-tag">
+                {post.data.category}
+              </div>
+
+              <time
+                class="post-date"
+                datetime={post.data.pubDate.toISOString()}
+              >
+                {formatDate(post.data.pubDate)}
+              </time>
+
+              <h3>{post.data.title}</h3>
 
               <p>{post.data.description}</p>
 
-              <time datetime={post.data.pubDate.toISOString()}>
-                {post.data.pubDate.toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </time>
+              <a href={`/blogs/${post.id}/`}>
+                Read Article →
+              </a>
             </article>
           ))
-        }
+        )
+      }
+    </section>
+
+    <section class="email-strip">
+      <div>
+        <h2>Join the ASF Crew</h2>
+
+        <p>
+          Get hot takes, blog drops, and chaos straight to your inbox.
+        </p>
+      </div>
+
+      <div class="kit-form-box">
+        <script
+          is:inline
+          async
+          data-uid="f203890c32"
+          src="https://average-sports-fan.kit.com/f203890c32/index.js"
+        ></script>
       </div>
     </section>
-  </div>
+  </main>
 </BaseLayout>
-
-<style>
-  .hero {
-    margin-bottom: 56px;
-    padding: 72px 40px;
-    border-radius: 8px;
-    background: var(--color-navy);
-    color: var(--color-white);
-  }
-
-  .eyebrow {
-    margin: 0 0 8px;
-    color: #a9c9e8;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  h1 {
-    margin: 0;
-    font-size: clamp(2.5rem, 7vw, 5rem);
-    line-height: 1;
-  }
-
-  .hero-description {
-    max-width: 680px;
-    margin: 24px 0;
-    font-size: 1.2rem;
-  }
-
-  .primary-button {
-    display: inline-block;
-    padding: 12px 20px;
-    border-radius: 4px;
-    background: var(--color-red);
-    color: var(--color-white);
-    font-weight: 700;
-    text-decoration: none;
-  }
-
-  .section-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    margin-bottom: 24px;
-  }
-
-  .article-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-  }
-
-  .article-card {
-    padding: 24px;
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    background: var(--color-white);
-  }
-
-  .article-card h3 {
-    margin: 8px 0;
-    font-size: 1.35rem;
-    line-height: 1.25;
-  }
-
-  .article-card h3 a {
-    text-decoration: none;
-  }
-
-  .article-card h3 a:hover {
-    text-decoration: underline;
-  }
-
-  .article-category {
-    margin: 0;
-    color: var(--color-red);
-    font-size: 0.8rem;
-    font-weight: 800;
-    text-transform: uppercase;
-  }
-
-  time {
-    color: var(--color-muted);
-    font-size: 0.875rem;
-  }
-
-  @media (max-width: 850px) {
-    .article-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .hero {
-      padding: 48px 24px;
-    }
-  }
-</style>
