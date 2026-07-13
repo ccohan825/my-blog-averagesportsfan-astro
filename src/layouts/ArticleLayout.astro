@@ -1,0 +1,184 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+
+import '../styles/article.css';
+import '../styles/mobile.css';
+
+interface Props {
+  currentId: string;
+  title: string;
+  description: string;
+  pubDate: Date;
+  category: 'NFL' | 'College Football';
+  author: string;
+  heroImage?: string;
+  heroImageAlt?: string;
+}
+
+const {
+  currentId,
+  title,
+  description,
+  pubDate,
+  category,
+  author,
+  heroImage,
+  heroImageAlt = title,
+} = Astro.props;
+
+const formattedDate = pubDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const categoryURL =
+  category === 'NFL'
+    ? '/nfl/'
+    : '/college-football/';
+
+const categoryButtonText =
+  category === 'NFL'
+    ? 'More NFL Blogs'
+    : 'More College Football Blogs';
+
+const relatedPosts = (
+  await getCollection(
+    'blog',
+    ({ data }) => data.draft !== true
+  )
+)
+  .filter((post) => post.id !== currentId)
+  .sort(
+    (a, b) =>
+      b.data.pubDate.valueOf() -
+      a.data.pubDate.valueOf()
+  )
+  .slice(0, 3);
+
+function formatRelatedPostDate(date: Date) {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+---
+
+<BaseLayout
+  title={`${title} | Average Sports Fan`}
+  description={description}
+  image={heroImage}
+>
+  <section class="page-hero">
+    <img
+      src="/images/red-brush.png"
+      class="corner-brush brush-red-left"
+      alt=""
+    />
+
+    <img
+      src="/images/blue-brush.png"
+      class="corner-brush brush-blue-right"
+      alt=""
+    />
+
+    <div class="hero-content">
+      <img
+        src="/images/logo.png"
+        class="hero-logo"
+        alt="Average Sports Fan logo"
+      />
+
+      <div class="hero-kicker">
+        {category}
+      </div>
+
+      <h1>{title}</h1>
+
+      <p>{description}</p>
+
+      <div class="article-meta">
+        <span>{formattedDate}</span>
+        <span>{author}</span>
+      </div>
+    </div>
+  </section>
+
+  <main class="article-wrap">
+    <article class="article-card">
+      <div class="article-topbar"></div>
+
+      {
+        heroImage && (
+          <figure class="article-featured-image">
+            <img
+              src={heroImage}
+              alt={heroImageAlt}
+            />
+          </figure>
+        )
+      }
+
+      <div class="article-body">
+        <slot />
+      </div>
+
+      <div class="article-actions">
+        <a
+          class="article-button red"
+          href="/blogs/"
+        >
+          ← Back to Blogs
+        </a>
+
+        <a
+          class="article-button"
+          href={categoryURL}
+        >
+          {categoryButtonText}
+        </a>
+      </div>
+    </article>
+  </main>
+
+  <section class="related-section">
+    <h2 class="section-title">
+      <span>More From ASF</span>
+    </h2>
+
+    <section class="blog-grid">
+      {
+        relatedPosts.length === 0 ? (
+          <div class="empty-posts">
+            More blogs coming soon.
+          </div>
+        ) : (
+          relatedPosts.map((post) => (
+            <article class="post-card">
+              <div class="post-tag">
+                {post.data.category}
+              </div>
+
+              <time
+                class="post-date"
+                datetime={post.data.pubDate.toISOString()}
+              >
+                {formatRelatedPostDate(post.data.pubDate)}
+              </time>
+
+              <h3>{post.data.title}</h3>
+
+              <p>{post.data.description}</p>
+
+              <a href={`/blogs/${post.id}/`}>
+                Read Article →
+              </a>
+            </article>
+          ))
+        )
+      }
+    </section>
+  </section>
+</BaseLayout>
