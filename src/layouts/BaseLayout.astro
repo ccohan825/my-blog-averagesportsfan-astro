@@ -15,13 +15,30 @@ const {
   image = '/images/logo.png',
 } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const socialImageURL = new URL(image, Astro.site);
+const siteOrigin = Astro.site ?? Astro.url.origin;
+const canonicalURL = new URL(Astro.url.pathname, siteOrigin);
+const socialImageURL = new URL(image, siteOrigin);
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
+  <!-- Google tag (gtag.js) -->
+<script
+  async
+  src="https://www.googletagmanager.com/gtag/js?id=G-35XZH73VDB"
+></script>
+
+<script is:inline>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'G-35XZH73VDB');
+</script>
     <meta charset="UTF-8" />
 
     <meta
@@ -95,9 +112,7 @@ const socialImageURL = new URL(image, Astro.site);
   <body>
     <Header />
 
-    <main class="page-content">
-      <slot />
-    </main>
+    <slot />
 
     <Footer />
   </body>
