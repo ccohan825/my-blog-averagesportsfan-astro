@@ -1,0 +1,106 @@
+---
+interface Props {
+  pageTitle: string;
+  pageId?: string;
+}
+
+const {
+  pageTitle,
+  pageId = Astro.url.pathname,
+} = Astro.props;
+
+/*
+This uses your real website URL even while testing locally.
+That prevents your comments from being attached to localhost.
+*/
+const siteUrl = "https://averagesportsfan.com";
+const pageUrl = new URL(Astro.url.pathname, siteUrl).toString();
+
+/*
+Replace the value below with the App ID from your Cusdis dashboard.
+*/
+const appId = "7b87a3f6-fa7f-41f7-b12e-2ad12f6cd794";
+---
+
+<section class="comments-section" aria-labelledby="comments-title">
+  <div class="comments-header">
+    <p class="comments-label">AVERAGE SPORTS FAN</p>
+
+    <h2 id="comments-title">Join the Conversation</h2>
+
+    <p class="comments-description">
+      Agree, disagree, or have a take of your own? Leave a comment below.
+    </p>
+    
+  </div>
+
+  <div
+    id="cusdis_thread"
+    data-host="https://cusdis.com"
+    data-app-id={appId}
+    data-page-id={pageId}
+    data-page-url={pageUrl}
+    data-page-title={pageTitle}
+  ></div>
+</section>
+
+<script
+  is:inline
+  async
+  defer
+  src="https://cusdis.com/js/cusdis.es.js"
+></script>
+
+<style>
+  .comments-section {
+    width: 100%;
+    max-width: 800px;
+    margin: 3.5rem auto 0;
+    padding: 2rem 0 1rem;
+    border-top: 4px solid #d71920;
+  }
+
+  .comments-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .comments-label {
+    margin: 0 0 0.35rem;
+    color: #d71920;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+  }
+
+  .comments-header h2 {
+    margin: 0;
+    color: #102a56;
+    font-size: clamp(1.65rem, 4vw, 2.15rem);
+    line-height: 1.15;
+  }
+
+  .comments-description {
+    margin: 0.75rem 0 0;
+    color: #3f4650;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .moderation-note {
+    margin: 0.5rem 0 0;
+    color: #6c737d;
+    font-size: 0.85rem;
+    font-style: italic;
+  }
+
+  #cusdis_thread {
+    min-height: 250px;
+  }
+
+  @media (max-width: 850px) {
+    .comments-section {
+      padding-right: 1rem;
+      padding-left: 1rem;
+    }
+  }
+</style>

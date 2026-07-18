@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import Comments from '../../components/Comments.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection(
@@ -34,4 +35,8 @@ const { Content } = await render(post);
   heroImageAlt={post.data.heroImageAlt}
 >
   <Content />
+  <Comments
+  pageTitle={post.data.title}
+  pageId={post.id}
+/>
 </ArticleLayout>
