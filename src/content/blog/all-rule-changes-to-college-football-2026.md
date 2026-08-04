@@ -3,8 +3,8 @@ title: All the rule changes the NCAA made for the 2026 season
 description: There are quite a few changes to the rules for college football this year and surprisingly, I think they did a good job. I read the rulebook so you don't have to.
 pubDate: 2026-08-04
 category: College Football
-heroImage: ''
-heroImageAlt: ''
+heroImage: /images/uploads/ncaa-rule-changes.png
+heroImageAlt: a live (very real) look in to the NCAA making any decision ever most of the time
 author: Average Sports Fan
 draft: false
 ---
