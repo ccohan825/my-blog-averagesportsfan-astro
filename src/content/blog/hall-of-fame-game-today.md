@@ -6,7 +6,7 @@ category: NFL
 heroImage: ''
 heroImageAlt: ''
 author: Average Sports Fan
-draft: true
+draft: false
 ---
 
 Happy hall of fame game today to everyone! I can’t wait to watch this game later tonight only to turn it off by the first half because of how absolutely boring, fundamental, and awful some of these fringe players will be. But, I am excited to watch some football nonetheless. This off-season has been a little more filled with sports thanks to the men’s World Cup taking place and Lebron deciding to take his talents to the city of brotherly love. 
