@@ -6,7 +6,7 @@ category: The Big Four
 heroImage: /images/uploads/img_0274.png
 heroImageAlt: ''
 author: Average Sports Fan
-draft: true
+draft: false
 ---
 
 Mike krukow has made it official that he will be retiring at the end of the 2026 season. Giants fans have known this day would come but wanted to push it away as long as they could. Krukow originally joined the booth in 1990 and he will have called 37 seasons of giants games for the fans. Every giants fan knows how iconic the kruk and Kuip games sound especially with Jon Miller joining them from the radio booth from time to time.
